@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Timeline from '../components/Timeline.astro';
+import { experience } from '../data/experience';
+import { skills } from '../data/skills';
+import { SITE } from '../data/site';
+
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.name,
+  jobTitle: 'Software Engineer',
+  description: SITE.description,
+  url: SITE.url,
+  email: `mailto:${SITE.email}`,
+  sameAs: [SITE.socials.github, SITE.socials.linkedin, SITE.socials.instagram],
+};
+---
+
+<BaseLayout title={`About — ${SITE.name}`} description="Perjalanan Irpan: dari Android ke Flutter, React Native, dan web — lalu bertani selada hidroponik dan menulis lagi." jsonLd={personJsonLd}>
+  <section class="py-14 md:py-20">
+    <h1 class="font-serif text-4xl font-medium tracking-tight md:text-5xl">About</h1>
+    <div class="story mt-8 max-w-[68ch] space-y-5">
+      <p>
+        Saya Irpan, software engineer yang sudah delapan tahun lebih menulis kode. Mulai dari
+        Android dengan Java, pindah ke Kotlin, lalu Flutter dan React Native, dan sekarang juga
+        membangun untuk web. Hal yang paling saya sukai dari kerja ini tetap sama dari dulu:
+        melihat sesuatu yang saya bangun dipakai orang sungguhan.
+      </p>
+      <p>
+        Tahun 2025 saya mengambil jeda karier. Setelah bertahun-tahun sprint dari satu rilis ke
+        rilis lain, saya butuh waktu untuk berhenti — dan tanpa rencana, mulai menanam selada
+        hidroponik dalam skala kecil. Ternyata ketagihan. Awal 2026 kebun itu jadi serius, dan
+        sekarang menjadi bagian tetap dari hari-hari saya.
+      </p>
+      <p>
+        Menariknya, kebun mengajarkan hal yang sama dengan software: sistem, siklus, observasi,
+        dan iterasi. Panen yang gagal dianalisis seperti bug produksi — apa yang berubah, kapan,
+        dan kenapa. Bahkan monitoring kebunnya saya bangun sendiri menjadi aplikasi
+        <a href="/projects/selada-ops">Selada Ops</a>.
+      </p>
+      <p>
+        Sekarang saya mencari peluang engineering — kontrak, kolaborasi, atau pekerjaan tetap —
+        sambil menjalankan kebun dan rutin menulis. Website ini tempat saya menaruh semuanya
+        dalam satu cerita.
+      </p>
+    </div>
+  </section>
+
+  <section aria-labelledby="experience" class="py-14 md:py-20">
+    <h2 id="experience" class="section-title">Experience</h2>
+    <div class="mt-8">
+      <Timeline entries={experience} />
+    </div>
+    <div class="mt-10">
+      <a href="/cv.pdf" class="btn btn-secondary" download>Unduh CV (PDF)</a>
+    </div>
+  </section>
+
+  <section aria-labelledby="skills" class="py-14 md:py-20">
+    <h2 id="skills" class="section-title">Skills</h2>
+    <div class="mt-8 space-y-8">
+      {
+        skills.map((group) => (
+          <div>
+            <h3 class="text-sm font-medium uppercase tracking-wide text-muted">{group.group}</h3>
+            <ul class="mt-3 flex flex-wrap gap-2">
+              {group.items.map((item) => (
+                <li class="chip">{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,53 @@
+{
+  "title": "Work",
+  "work": [
+    {
+      "company": "NTT Global Indo",
+      "logo": "ntt global indo logo",
+      "start": "2065",
+      "end": "Current",
+      "description": "Outsourcing development services to NTT Global Indo as a software developer.",
+      "stack": "family · friends · garden · nature"
+    },
+    {
+      "company": "Career Break",
+      "logo": "search career break logo",
+      "start": "2025",
+      "end": "2026",
+      "description": "Rest and find a new job that fits my skills and interests.",
+      "stack": "family · friends · garden · nature"
+    },
+    {
+      "company": "Cakap",
+      "logo": "https://squline-storage.s3.ap-southeast-1.amazonaws.com/selfpaced/material/cakap/images/cakap+icon.png",
+      "start": "2022",
+      "end": "2025",
+      "description": "Cakap is a leading EdTech company in Indonesia, providing online language learning solutions.",
+      "stack": "kotlin · java · firebase · qiscus · midtrans · agora · xml · compose · dagger · mixpanel · gitlab · exoplayer · lottie · sonarqube · rxjava · coroutine · retrofit · junit · socket.io · fastlane"
+    },
+    {
+      "company": "Argapro",
+      "logo": "https://media.licdn.com/dms/image/v2/C510BAQFHP0Cg88d3qw/company-logo_200_200/company-logo_200_200/0/1630613640929/argapro_logo?e=2147483647&v=beta&t=9tpu32Oub892d5yBCm5Lj0UDJuZEtKG0lEh7hxUHyW0",
+      "start": "2021",
+      "end": "Present",
+      "description": "Argapro is a technology company focused on providing innovative solutions for the agricultural sector.",
+      "stack": "xml · kotlin · firebase · compose · koin · gitlab · lottie · coroutine · retrofit · onesignal · junit"
+    },
+    {
+      "company": "Rolling Glory",
+      "logo": "https://cdn-images-1.medium.com/v2/resize:fit:1200/1*6QqmSl6ePIccAhsn5H98KA.png",
+      "start": "2019",
+      "end": "2021",
+      "description": "Rolling Glory is a digital agency specializing in mobile app development and design.",
+      "stack": "kotlin · java · firebase · qiscus · agora · dagger · xml · gitlab · exoplayer · lottie · rxjava · coroutine · jenkins · retrofit"
+    },
+    {
+      "company": "Bigio.id",
+      "logo": "https://www.bejana.id/themes/big-theme/assets/img/Beranda/Logo-big.png",
+      "start": "2018",
+      "end": "2019",
+      "description": "Bigio.id is a startup focused on providing digital solutions for small and medium enterprises.",
+      "stack": "android · ios · java · react-native · expo"
+    }
+  ]
+}

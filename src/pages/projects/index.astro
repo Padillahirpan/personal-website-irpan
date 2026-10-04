@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { SITE } from '../../data/site';
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout
+  title={`Projects — ${SITE.name}`}
+  description="Proyek software pilihan Irpan: Selada Ops, TokoKu, Hika no Gakusei, dan lainnya — masalah, pendekatan, dan hasilnya."
+>
+  <section class="py-14 md:py-20">
+    <h1 class="font-serif text-4xl font-medium tracking-tight md:text-5xl">Projects</h1>
+    <p class="mt-4 max-w-[60ch] text-muted">
+      Kualitas, bukan kuantitas: proyek yang benar-benar saya bangun, dirawat, dan dipakai.
+    </p>
+
+    <div class="mt-10 grid gap-6 sm:grid-cols-2">
+      {projects.map((project) => <ProjectCard project={project} />)}
+    </div>
+  </section>
+</BaseLayout>

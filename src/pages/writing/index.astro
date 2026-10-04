@@ -1,0 +1,65 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { SITE } from '../../data/site';
+import { publishedPosts, sortPosts } from '../../utils/content';
+
+const categories = ['Semua', 'Jurnal', 'Teknologi', 'Kebun'] as const;
+const posts = sortPosts(publishedPosts(await getCollection('writing')));
+---
+
+<BaseLayout
+  title={`Writing — ${SITE.name}`}
+  description="Tulisan Irpan: jurnal pribadi, catatan teknis, dan pelajaran dari kebun hidroponik."
+>
+  <section class="py-14 md:py-20">
+    <h1 class="font-serif text-4xl font-medium tracking-tight md:text-5xl">Writing</h1>
+    <p class="mt-4 max-w-[60ch] text-muted">
+      Jurnal, catatan teknis, dan pelajaran dari kebun. Ditulis pelan-pelan, rutin.
+    </p>
+
+    <div class="mt-8 flex flex-wrap gap-2" role="group" aria-label="Filter kategori">
+      {
+        categories.map((category, i) => (
+          <button
+            type="button"
+            data-filter={category.toLowerCase()}
+            aria-pressed={i === 0 ? 'true' : 'false'}
+            class="chip transition-colors hover:border-accent hover:text-accent aria-pressed:border-accent aria-pressed:text-accent"
+          >
+            {category}
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="mt-6">
+      <PostList posts={posts} filterable />
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  // Filter kategori ringan: sembunyikan item tanpa memuat ulang halaman.
+  (function () {
+    var buttons = document.querySelectorAll('[data-filter]');
+    var items = document.querySelectorAll('[data-post-list] [data-category]');
+    if (!buttons.length || !items.length) return;
+
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var filter = btn.getAttribute('data-filter');
+        buttons.forEach(function (other) {
+          other.setAttribute('aria-pressed', other === btn ? 'true' : 'false');
+        });
+        items.forEach(function (item) {
+          item.style.display =
+            filter === 'semua' || item.getAttribute('data-category')?.toLowerCase() === filter
+              ? ''
+              : 'none';
+        });
+      });
+    });
+  })();
+</script>

@@ -1,0 +1,68 @@
+---
+import { SITE } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path absolut (mis. /og-default.jpg) yang diresolve terhadap site URL */
+  image?: string;
+  type?: 'website' | 'article';
+  jsonLd?: object | object[];
+}
+
+const { title, description, image = '/og-default.jpg', type = 'website', jsonLd } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+<meta name="generator" content={Astro.generator} />
+
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:locale" content={SITE.locale} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<link rel="alternate" type="application/rss+xml" title={SITE.name} href={new URL('rss.xml', Astro.site)} />
+
+{
+  jsonLd && (
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  )
+}
+
+{
+  /* Analytics opsional (Plausible) — aktif hanya jika PUBLIC_PLAUSIBLE_DOMAIN di-set. Tanpa cookie. */
+  plausibleDomain && (
+    <script is:inline defer data-domain={plausibleDomain} src="https://plausible.io/js/script.js" />
+  )
+}
+
+<script is:inline>
+  // Set tema sebelum render agar tidak ada flash tema yang salah.
+  (function () {
+    var stored = localStorage.getItem('theme');
+    var theme =
+      stored === 'light' || stored === 'dark'
+        ? stored
+        : window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light';
+    document.documentElement.dataset.theme = theme;
+  })();
+</script>
