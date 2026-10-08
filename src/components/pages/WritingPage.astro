@@ -1,0 +1,72 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../PostList.astro';
+import { SITE } from '../../data/site';
+import { publishedPosts, sortPosts } from '../../utils/content';
+import { t, type Lang } from '../../i18n/ui';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'id' } = Astro.props;
+const T = t(lang);
+
+// Kunci internal filter tetap id (sesuai data-category); label diterjemahkan.
+const filterKeys = ['semua', 'jurnal', 'teknologi', 'kebun'] as const;
+
+const posts = sortPosts(publishedPosts(await getCollection('writing')));
+---
+
+<BaseLayout title={`${T.writing.title} — ${SITE.name}`} description={T.writing.metaDescription} lang={lang}>
+  <section class="py-6 md:py-12">
+    <h1 class="font-serif text-4xl font-medium tracking-tight md:text-5xl">{T.writing.title}</h1>
+    <p class="mt-4 max-w-[60ch] text-muted">{T.writing.intro}</p>
+
+    <div class="mt-8 flex flex-wrap gap-2" role="group" aria-label={T.writing.filterAria}>
+      {
+        filterKeys.map((key, i) => (
+          <button
+            type="button"
+            data-filter={key}
+            aria-pressed={i === 0 ? 'true' : 'false'}
+            class="chip transition-colors hover:border-accent hover:text-accent aria-pressed:border-accent aria-pressed:text-accent"
+          >
+            {T.writing.filters[key]}
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="mt-6">
+      <PostList posts={posts} lang={lang} filterable />
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  // Filter kategori ringan: sembunyikan item tanpa memuat ulang halaman.
+  // data-category memakai nilai frontmatter asli ('Jurnal'|'Teknologi'|'Kebun'),
+  // dicocokkan lowercase dengan data-filter.
+  (function () {
+    var buttons = document.querySelectorAll('[data-filter]');
+    var items = document.querySelectorAll('[data-post-list] [data-category]');
+    if (!buttons.length || !items.length) return;
+
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var filter = btn.getAttribute('data-filter');
+        buttons.forEach(function (other) {
+          other.setAttribute('aria-pressed', other === btn ? 'true' : 'false');
+        });
+        items.forEach(function (item) {
+          item.style.display =
+            filter === 'semua' || item.getAttribute('data-category')?.toLowerCase() === filter
+              ? ''
+              : 'none';
+        });
+      });
+    });
+  })();
+</script>

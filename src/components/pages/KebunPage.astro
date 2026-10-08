@@ -1,0 +1,177 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE, waLink } from '../../data/site';
+import { kebunCycle, kebunDeliveryArea, kebunFacts, kebunVarieties } from '../../data/kebun';
+import { formatDate } from '../../utils/content';
+import { t, withLang, type Lang } from '../../i18n/ui';
+
+import greenhouse from '../../assets/images/kebun/greenhouse.jpg';
+import nftChannel from '../../assets/images/kebun/nft-channel.jpg';
+import seladaCloseup from '../../assets/images/kebun/profile.jpg';
+import semaiTray from '../../assets/images/kebun/semai-tray.jpg';
+import panenCrate from '../../assets/images/kebun/panen-crate.jpg';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'id' } = Astro.props;
+const T = t(lang);
+
+const logs = (await getCollection('kebunLog')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+
+const gallery = [
+  { src: greenhouse, altId: 'Bagian dalam greenhouse dengan talang NFT berbaris selada hijau', altEn: 'Inside the greenhouse with NFT channels lined with green lettuce' },
+  { src: nftChannel, altId: 'Talang NFT dengan aliran nutrisi dan selada butterhead', altEn: 'NFT channel with nutrient flow and butterhead lettuce' },
+  { src: seladaCloseup, altId: 'Kepala selada green oak yang tumbuh subur di net pot', altEn: 'A thriving green oak lettuce head in a net pot' },
+  { src: semaiTray, altId: 'Bibit selada muda di tray semai rockwool', altEn: 'Young lettuce seedlings in a rockwool nursery tray' },
+  { src: panenCrate, altId: 'Selada segar hasil panen tersusun dalam krat siap kirim', altEn: 'Freshly harvested lettuce packed in a crate, ready for delivery' },
+];
+
+const pesanHref = `${withLang('/kebun', lang)}#pesan`;
+---
+
+<BaseLayout title={`${T.kebun.title} — ${SITE.name}`} description={T.kebun.metaDescription} lang={lang}>
+  <section class="py-6 md:py-12">
+    <div class="grid items-start gap-10 md:grid-cols-[1fr_auto]">
+      <div>
+        <h1 class="font-serif text-4xl font-medium tracking-tight md:text-5xl">{T.kebun.title}</h1>
+        <div class="story mt-8 max-w-[68ch] space-y-5">
+          {T.kebun.story.map((p) => <p set:html={p.replace('{pesan}', pesanHref)} />)}
+        </div>
+      </div>
+      <Image
+        src={seladaCloseup}
+        alt={T.kebun.storyPhotoAlt}
+        widths={[160, 320]}
+        sizes="160px"
+        class="size-40 rounded-full border border-line object-cover"
+        loading="eager"
+      />
+    </div>
+  </section>
+
+  <section aria-labelledby="sistem-kebun" class="py-6 md:py-12">
+    <h2 id="sistem-kebun" class="section-title">{T.kebun.system}</h2>
+    <dl class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+      {
+        kebunFacts.map((fact) => (
+          <div class="rounded-xl border border-line bg-surface p-4">
+            <dt class="text-xs text-muted">{fact.label[lang]}</dt>
+            <dd class="mt-1 font-serif text-2xl font-medium">{fact.value[lang]}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <section aria-labelledby="siklus-tanam" class="py-6 md:py-12">
+    <h2 id="siklus-tanam" class="section-title">{T.kebun.cycle}</h2>
+    <ol class="mt-8 grid gap-4 md:grid-cols-5">
+      {
+        kebunCycle.map((step, i) => (
+          <li class="relative rounded-xl border border-line bg-surface p-5">
+            <span class="font-mono text-xs text-accent" aria-hidden="true">
+              0{i + 1}
+            </span>
+            <h3 class="mt-1 font-serif text-lg font-medium">{step.title[lang]}</h3>
+            <p class="mt-1 text-sm text-muted">{step.description[lang]}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section aria-labelledby="jurnal-kebun" class="py-6 md:py-12">
+    <h2 id="jurnal-kebun" class="section-title">{T.kebun.journal}</h2>
+    <p class="mt-3 max-w-[60ch] text-sm text-muted">{T.kebun.journalIntro}</p>
+    <ul class="mt-8 grid gap-6 md:grid-cols-3">
+      {
+        logs.map((log) => (
+          <li class="overflow-hidden rounded-xl border border-line bg-surface">
+            <Image
+              src={log.data.photo}
+              alt={T.kebun.journalAlt(log.data.title)}
+              widths={[400, 640]}
+              sizes="(min-width: 768px) 33vw, 100vw"
+              class="aspect-[4/3] w-full border-b border-line object-cover"
+              loading="lazy"
+            />
+            <div class="p-5">
+              <time datetime={log.data.date.toISOString()} class="text-sm text-muted">
+                {formatDate(log.data.date, lang)}
+              </time>
+              <h3 class="mt-1 font-serif text-lg font-medium">{log.data.title}</h3>
+              <p class="mt-2 text-sm text-muted">{log.body?.trim()}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section aria-labelledby="galeri" class="py-6 md:py-12">
+    <h2 id="galeri" class="section-title">{T.kebun.gallery}</h2>
+    <div class="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
+      {
+        gallery.map((photo) => (
+          <Image
+            src={photo.src}
+            alt={lang === 'en' ? photo.altEn : photo.altId}
+            widths={[320, 640, 960]}
+            sizes="(min-width: 768px) 33vw, 50vw"
+            class="aspect-[4/3] w-full rounded-xl border border-line object-cover"
+            loading="lazy"
+          />
+        ))
+      }
+    </div>
+  </section>
+
+  <section aria-labelledby="selada-ops" class="py-6 md:py-12">
+    <div class="flex flex-col items-start gap-6 rounded-xl border border-line bg-surface p-6 md:flex-row md:items-center md:justify-between md:p-8">
+      <div>
+        <h2 id="selada-ops" class="section-title">{T.kebun.opsTitle}</h2>
+        <p class="mt-2 max-w-[56ch] text-sm text-muted">{T.kebun.opsText}</p>
+      </div>
+      <a href={withLang('/projects/selada-ops', lang)} class="btn btn-secondary shrink-0">{T.kebun.opsButton}</a>
+    </div>
+  </section>
+
+  <section id="pesan" aria-labelledby="pesan-selada" class="scroll-mt-20 py-6 md:py-12">
+    <div class="rounded-xl border border-line bg-surface p-6 md:p-10">
+      <h2 id="pesan-selada" class="section-title">{T.kebun.orderTitle}</h2>
+      <p class="mt-3 max-w-[60ch] text-muted">
+        {T.kebun.orderIntro.replace('{area}', kebunDeliveryArea[lang])}
+      </p>
+
+      <dl class="mt-8 grid gap-6 sm:grid-cols-3">
+        <div>
+          <dt class="text-xs font-medium uppercase tracking-wide text-muted">{T.kebun.varieties}</dt>
+          <dd class="mt-2 space-y-1 text-sm">
+            {kebunVarieties.map((variety) => <p>{variety}</p>)}
+          </dd>
+        </div>
+        <div>
+          <dt class="text-xs font-medium uppercase tracking-wide text-muted">{T.kebun.capacity}</dt>
+          <dd class="mt-2 text-sm">{T.kebun.capacityText}</dd>
+        </div>
+        <div>
+          <dt class="text-xs font-medium uppercase tracking-wide text-muted">{T.kebun.delivery}</dt>
+          <dd class="mt-2 text-sm">{kebunDeliveryArea[lang]} {T.kebun.deliveryDetail}</dd>
+        </div>
+      </dl>
+
+      <div class="mt-8">
+        <a href={waLink} class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+          {T.kebun.orderButton}
+        </a>
+        <p class="mt-3 text-xs text-muted">{T.kebun.orderNote}</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

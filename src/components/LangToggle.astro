@@ -1,0 +1,40 @@
+---
+import { t, langAlternates, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const T = t(lang);
+const alt = langAlternates(Astro.url.pathname);
+---
+
+<div
+  class="flex items-center overflow-hidden rounded-xl border border-line text-[11px] font-semibold tracking-wide"
+  role="group"
+  aria-label={T.langToggleLabel}
+>
+  <a
+    href={alt.id}
+    hreflang="id"
+    aria-current={lang === 'id' ? 'true' : undefined}
+    class:list={[
+      'px-2 py-1.5 transition-colors',
+      lang === 'id' ? 'bg-accent text-accent-fg' : 'text-muted hover:text-accent',
+    ]}
+  >
+    ID
+  </a>
+  <a
+    href={alt.en}
+    hreflang="en"
+    aria-current={lang === 'en' ? 'true' : undefined}
+    class:list={[
+      'border-l border-line px-2 py-1.5 transition-colors',
+      lang === 'en' ? 'bg-accent text-accent-fg' : 'text-muted hover:text-accent',
+    ]}
+  >
+    EN
+  </a>
+</div>

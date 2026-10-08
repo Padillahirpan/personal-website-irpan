@@ -8,6 +8,7 @@ import '../styles/global.css';
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { t, type Lang } from '../i18n/ui';
 
 interface Props {
   title: string;
@@ -15,22 +16,24 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   jsonLd?: object | object[];
+  lang?: Lang;
 }
 
-const { title, description, image, type, jsonLd } = Astro.props;
+const { title, description, image, type, jsonLd, lang = 'id' } = Astro.props;
+const T = t(lang);
 ---
 
 <!doctype html>
-<html lang="id">
+<html lang={lang}>
   <head>
-    <BaseHead {title} {description} {image} {type} {jsonLd} />
+    <BaseHead {title} {description} {image} {type} {jsonLd} {lang} />
   </head>
   <body class="min-h-dvh bg-bg font-sans text-ink antialiased">
-    <a href="#konten" class="skip-link">Lewati ke konten</a>
-    <Header />
+    <a href="#konten" class="skip-link">{T.skipToContent}</a>
+    <Header {lang} />
     <main id="konten" class="mx-auto w-full max-w-[1040px] px-5 sm:px-6">
       <slot />
     </main>
-    <Footer />
+    <Footer {lang} />
   </body>
 </html>

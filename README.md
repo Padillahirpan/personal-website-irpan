@@ -19,9 +19,9 @@ Semua data yang sering berubah terpusat di `src/data/` — nilai bertanda `[CONT
 | File | Isi |
 |---|---|
 | `src/data/site.ts` | Tagline, email, handle GitHub/LinkedIn/Instagram, **nomor WhatsApp** (pesan selada otomatis terisi dari sini), URL domain |
-| `src/data/experience.ts` | Timeline karier (sumber awal: `work.json`). **Verifikasi periode NTT ("2065" → 2026) dan Argapro ("Present")** serta semua poin dampak |
+| `src/data/experience.ts` | Timeline karier **bilingual `{ id, en }`** (sumber awal: `work.json`). **Verifikasi periode NTT ("2065" → 2026) dan Argapro ("Present")** serta semua poin dampak |
 | `src/data/skills.ts` | Daftar skill per grup |
-| `src/data/kebun.ts` | Angka sistem kebun (greenhouse, tandon, lubang tanam, varian, area kirim) |
+| `src/data/kebun.ts` | Angka sistem kebun **bilingual `{ id, en }`** (greenhouse, tandon, lubang tanam, varian, area kirim) |
 
 Lainnya:
 
@@ -29,6 +29,17 @@ Lainnya:
 - **Foto & gambar:** semua gambar saat ini ilustrasi placeholder — ganti di `src/assets/images/` (nama file sama, tetap `.jpg`) dan `public/og-default.jpg` dengan foto asli.
 - **CV:** ganti `public/cv.pdf` dengan CV asli.
 - **Placeholder teks:** cari `{{` untuk menemukan bagian yang menunggu data asli (mis. kapasitas mingguan, area pengiriman detail).
+
+## Dua bahasa (ID / EN)
+
+- **Indonesia (default)** di rute tanpa prefix: `/`, `/about`, `/kebun`, …
+- **English** di prefix `/en`: `/en`, `/en/about`, `/en/kebun`, …
+- Toggle **ID | EN** ada di header, di sebelah toggle tema — mengarah ke halaman yang sama di bahasa lain.
+- Setiap halaman otomatis memancarkan `hreflang` (`id`, `en`, `x-default`) untuk SEO.
+
+**Edit teks UI:** semua string dua bahasa ada di `src/i18n/ui.ts` (objek `id` dan `en` — struktur harus identik, dijaga TypeScript). Data bilingual (`{ id, en }`): `src/data/experience.ts` dan `src/data/kebun.ts`.
+
+**Konten artikel/jurnal kebun** ditulis dalam bahasa aslinya (Indonesia) dan dirender sama di kedua rute — chrome/label di sekitarnya tetap diterjemahkan. Kalau nanti ingin post berbahasa Inggris, cukup tulis post-nya dalam EN (konten tidak diterjemahkan otomatis).
 
 ## Menambah konten
 
@@ -70,13 +81,16 @@ Skema divalidasi saat build (`src/content.config.ts`) — front matter salah = b
 
 ```
 src/
-├─ components/    Header, Footer, ThemeToggle, BaseHead (SEO), ProjectCard, PostList, Timeline
+├─ components/
+│  ├─ pages/      Isi halaman per bahasa (HomePage, AboutPage, KebunPage, …) — dipakai ID & EN
+│  └─ …           Header, Footer, ThemeToggle, LangToggle, BaseHead (SEO), ProjectCard, PostList, Timeline
+├─ i18n/ui.ts     Kamus dua bahasa + helper (withLang, langAlternates)
 ├─ layouts/       BaseLayout, PostLayout
-├─ pages/         index, about, projects/[slug], kebun, writing/[slug], contact, rss.xml, robots.txt
+├─ pages/         Rute ID (index, about, …) + rute EN di pages/en/
 ├─ content/       writing/ · projects/ · kebun-log/ (konten = file)
 ├─ data/          site, experience, skills, kebun (edit di sini, bukan di komponen)
 ├─ styles/        global.css — design tokens light/dark (CSS variables)
-└─ utils/         helper tanggal, waktu baca, sortir post
+└─ utils/         helper tanggal, waktu baca, sortir post, getStaticPaths
 ```
 
 Fitur teknis: dark/light mode tanpa flash (inline script `<head>`, pilihan disimpan di `localStorage`), font self-host (Newsreader + Inter + JetBrains Mono), Shiki dual theme untuk code block, RSS `/rss.xml`, sitemap otomatis, JSON-LD (`Person` & `BlogPosting`), OG + Twitter card, filter kategori blog ringan (vanilla JS).

@@ -1,0 +1,73 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../ProjectCard.astro';
+import { SITE } from '../../data/site';
+import { t, type Lang } from '../../i18n/ui';
+import projectData from '../../data/project.json';
+
+interface ClientProject {
+  name: string;
+  ss: string;
+  description: string;
+  link: string;
+}
+
+const clientProjects = projectData.project as ClientProject[];
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'id' } = Astro.props;
+const T = t(lang);
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout title={`${T.projects.title} — ${SITE.name}`} description={T.projects.metaDescription} lang={lang}>
+  <section class="py-6 md:py-12">
+    <h1 class="font-serif text-4xl font-medium tracking-tight md:text-5xl">{T.projects.title}</h1>
+    <p class="mt-4 max-w-[60ch] text-muted">{T.projects.intro}</p>
+
+    <div class="mt-10 grid gap-6 sm:grid-cols-2">
+      {projects.map((project) => <ProjectCard project={project} lang={lang} />)}
+    </div>
+  </section>
+
+  <section aria-labelledby="proyek-klien" class="py-6 md:py-12">
+    <h2 id="proyek-klien" class="section-title">{T.projects.clientTitle}</h2>
+    <p class="mt-2 max-w-[60ch] text-muted">{T.projects.clientIntro}</p>
+
+    <ul class="mt-2 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <!-- Kartu bergaya folder: "tab" di atas tiap kartu ikut menyala saat hover -->
+      {
+        clientProjects.map((project) => (
+          <li class="mt-3">
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group relative block cursor-pointer rounded-xl border border-line bg-surface p-5 pt-7 transition-colors hover:border-accent"
+            >
+              <span
+                class="absolute -top-[13px] left-5 h-[14px] w-24 rounded-t-lg border border-b-0 border-line bg-surface transition-colors group-hover:border-accent"
+                aria-hidden="true"
+              />
+              <div class="flex items-start justify-between gap-3">
+                <h3 class="font-serif text-lg font-medium tracking-tight transition-colors group-hover:text-accent">
+                  {project.name}
+                </h3>
+                <span class="mt-1 shrink-0 text-sm text-muted transition-colors group-hover:text-accent" aria-hidden="true">
+                  ↗
+                </span>
+              </div>
+              <p class="mt-2 line-clamp-3 text-sm text-muted">{project.description}</p>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>

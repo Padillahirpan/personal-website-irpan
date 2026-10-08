@@ -1,49 +1,28 @@
 ---
 import { SITE } from '../data/site';
+import { t, withLang, type Lang } from '../i18n/ui';
 
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'id' } = Astro.props;
+const T = t(lang);
 const year = new Date().getFullYear();
-
-const links = [
-  { href: '/about', label: 'About' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/kebun', label: 'Kebun' },
-  { href: '/writing', label: 'Writing' },
-  { href: '/contact', label: 'Contact' },
-];
 
 const socials = [
   { href: `mailto:${SITE.email}`, label: 'Email' },
   { href: SITE.socials.github, label: 'GitHub' },
   { href: SITE.socials.linkedin, label: 'LinkedIn' },
-  { href: SITE.socials.instagram, label: 'Instagram' },
-  { href: '/rss.xml', label: 'RSS' },
 ];
 ---
 
-<footer class="mt-24 border-t border-line">
-  <div class="mx-auto w-full max-w-[1040px] px-5 py-12 sm:px-6">
-    <div class="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
-      <div>
-        <p class="font-serif text-lg font-medium">Irpan</p>
-        <p class="mt-1 text-sm text-muted">{SITE.tagline}</p>
-      </div>
+<footer class="mt-2">
+  <div class="mx-auto w-full max-w-[1040px] px-5 py-2 sm:px-6">
 
-      <div class="flex flex-col gap-8 sm:flex-row sm:gap-16">
-        <nav aria-label="Navigasi footer" class="flex flex-col gap-2 text-sm">
-          {links.map((link) => <a href={link.href} class="text-muted transition-colors hover:text-accent">{link.label}</a>)}
-        </nav>
-        <nav aria-label="Tautan sosial" class="flex flex-col gap-2 text-sm">
-          {socials.map((link) => (
-            <a href={link.href} class="text-muted transition-colors hover:text-accent" {...(link.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
-              {link.label}
-            </a>
-          ))}
-        </nav>
-      </div>
-    </div>
-
-    <p class="mt-10 border-t border-line pt-6 text-xs text-muted">
-      © {year} Irpan · Dibangun dengan <a href="https://astro.build" class="underline underline-offset-2 hover:text-accent" target="_blank" rel="noopener noreferrer">Astro</a>
+    <p class="mt-2 border-t border-line pt-6 text-xs text-muted">
+      © {year} Irpan · {T.footer.builtWith}
+      <a href="https://astro.build" class="underline underline-offset-2 hover:text-accent" target="_blank" rel="noopener noreferrer">Astro</a>
     </p>
   </div>
 </footer>

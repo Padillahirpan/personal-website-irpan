@@ -1,0 +1,47 @@
+{
+  "title": "Project",
+  "project": [
+    {
+      "name": "Videoboxd",
+      "ss": "videoboxd.png",
+      "description": "Videoboxd is a social video review platform. It lets you search interesting videos, rate and review videos, create playlists, and follow other users to see their preferences. Think of Letterboxd but for YouTube.",
+      "link": "https://videoboxd.com/"
+    },
+    {
+      "name": "Cakap",
+      "ss": "cakap.png",
+      "description": "Cakap is an online learning platform that offers a wide range of courses and training programs to help individuals and organizations enhance their skills and knowledge.",
+      "link": "https://play.google.com/store/apps/details?id=com.squline.student"
+    },
+    {
+      "name": "Appukat Go",
+      "ss": "appukat.png",
+      "description": "Appukat Go is a technology company focused on providing innovative solutions for the agricultural sector.",
+      "link": "https://appukat.com"
+    },
+    {
+      "name": "Erha Mobile App",
+      "ss": "erha.png",
+      "description": "Erha Mobile App is a application for Customer Erha and Doctor to  improve access to skin and hair health and attract more patients. Break down barriers and connect face-to-face with your patients through video visits, chats, and phone calls in as little as five minutes in the privacy and convenience of your home - or wherever you are, much faster than conventional methods.",
+      "link": "https://play.google.com/store/apps/details?id=id.erha.doctorapp"
+    },
+    {
+      "name": "Chakra Reward",
+      "ss": "chakra.png",
+      "description": "Chakra is a rewards platform that allows users to earn points and redeem them for various benefits and discounts.",
+      "link": "https://play.google.com/store/apps/details?id=com.kalbe.cakraloyalty"
+    },
+    {
+      "name": "Kalcare Rewards",
+      "ss": "kalbe.png",
+      "description": "Kalcare Rewards is a loyalty program offered by Kalbe, a leading healthcare company in Indonesia, that allows customers to earn points and redeem them for various health and wellness products and services.",
+      "link": "https://play.google.com/store/apps/details?id=com.rollingglory.kalbefamily"
+    },
+    {
+      "name": "KlikDokter",
+      "ss": "klikdokter.png",
+      "description": "KlikDokter is a healthcare platform that provides online medical consultations, health information, and services to help individuals manage their health and well-being.",
+      "link": "https://play.google.com/store/apps/details?id=id.codigo.klikdokter"
+    }
+  ]
+}

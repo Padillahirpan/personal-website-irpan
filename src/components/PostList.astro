@@ -1,14 +1,17 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { formatDate, isoDate, readingTime } from '../utils/content';
+import { t, type Lang } from '../i18n/ui';
 
 interface Props {
   posts: CollectionEntry<'writing'>[];
-  /** Sembbunyikan item di luar kategori (dipakai filter di /writing) */
+  lang?: Lang;
+  /** Tampilkan atribut data-category untuk filter di /writing */
   filterable?: boolean;
 }
 
-const { posts, filterable = false } = Astro.props;
+const { posts, lang = 'id', filterable = false } = Astro.props;
+const T = t(lang);
 ---
 
 <ul class="divide-y divide-line" data-post-list>
@@ -20,11 +23,19 @@ const { posts, filterable = false } = Astro.props;
       >
         <a href={`/writing/${post.id}`} class="group block">
           <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">
-            <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date)}</time>
+            <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date, lang)}</time>
             <span aria-hidden="true">·</span>
-            <span>{post.data.category}</span>
+            <span>{T.category[post.data.category] ?? post.data.category}</span>
             <span aria-hidden="true">·</span>
-            <span>{readingTime(post.body)} menit baca</span>
+            <span>{T.minutesRead(readingTime(post.body))}</span>
+            {
+              // Penanda draft — hanya tampil saat dev, tidak pernah ikut build produksi
+              import.meta.env.DEV && post.data.draft && (
+                <span class="rounded-full border border-accent px-2 py-0.5 text-xs text-accent">
+                  Draft
+                </span>
+              )
+            }
           </div>
           <h2 class="mt-1 font-serif text-xl font-medium tracking-tight transition-colors group-hover:text-accent">
             {post.data.title}

@@ -5,6 +5,7 @@ date: 2026-09-18
 category: 'Teknologi'
 tags: ['astro', 'web', 'performa']
 cover: ../../assets/images/writing/astro.jpg
+draft: true
 ---
 
 Latar belakang saya Android. Delapan tahun di Kotlin, Java, sedikit Flutter dan React Native. Jadi saat memutuskan bikin website personal, saya menilai pilihan itu seperti menilai arsitektur aplikasi: apa kebutuhannya, apa biayanya.

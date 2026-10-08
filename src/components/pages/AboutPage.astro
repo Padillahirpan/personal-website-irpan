@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Timeline from '../Timeline.astro';
+import { experience } from '../../data/experience';
+import { skills } from '../../data/skills';
+import { SITE } from '../../data/site';
+import { t, withLang, type Lang } from '../../i18n/ui';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'id' } = Astro.props;
+const T = t(lang);
+
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.name,
+  jobTitle: 'Software Engineer',
+  description: T.about.metaDescription,
+  url: SITE.url,
+  email: `mailto:${SITE.email}`,
+  sameAs: [SITE.socials.github, SITE.socials.linkedin, SITE.socials.instagram],
+};
+
+const storyLink = withLang('/projects/selada-ops', lang);
+---
+
+<BaseLayout title={`${T.about.title} — ${SITE.name}`} description={T.about.metaDescription} jsonLd={personJsonLd} lang={lang}>
+  <section class="py-6 md:py-12">
+    <h1 class="font-serif text-4xl font-medium tracking-tight md:text-5xl">{T.about.title}</h1>
+    <div class="story mt-8 max-w-[68ch] space-y-5">
+      {T.about.story.map((p) => <p set:html={p.replace('{seladaOps}', storyLink)} />)}
+    </div>
+  </section>
+
+  <section aria-labelledby="experience" class="py-6 md:py-12">
+    <h2 id="experience" class="section-title">{T.about.experience}</h2>
+    <div class="mt-8">
+      <Timeline entries={experience} lang={lang} />
+    </div>
+    <div class="mt-10">
+      <a href="/cv.pdf" class="btn btn-secondary" download>{T.about.download}</a>
+    </div>
+  </section>
+</BaseLayout>

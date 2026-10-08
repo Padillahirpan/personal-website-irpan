@@ -1,63 +1,10 @@
 ---
-import { getCollection, render } from 'astro:content';
-import { getImage } from 'astro:assets';
-import PostLayout from '../../layouts/PostLayout.astro';
-import { SITE } from '../../data/site';
-import { isoDate, publishedPosts, sortPosts } from '../../utils/content';
+import PostDetail from '../../components/pages/PostDetail.astro';
+import { writingPaths } from '../../utils/content';
 
-export async function getStaticPaths() {
-  const posts = sortPosts(publishedPosts(await getCollection('writing')));
-  return posts.map((post, i) => ({
-    params: { slug: post.id },
-    props: {
-      post,
-      prev: posts[i - 1] ?? null,
-      next: posts[i + 1] ?? null,
-    },
-  }));
-}
+export const getStaticPaths = writingPaths;
 
 const { post, prev, next } = Astro.props;
-const { Content, headings } = await render(post);
-
-let ogImage = '/og-default.jpg';
-if (post.data.cover) {
-  const rendered = await getImage({ src: post.data.cover, width: 1200, format: 'jpg' });
-  ogImage = rendered.src;
-}
-
-const blogPostingJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'BlogPosting',
-  headline: post.data.title,
-  description: post.data.description,
-  datePublished: isoDate(post.data.date),
-  inLanguage: 'id',
-  keywords: post.data.tags.join(', '),
-  author: { '@type': 'Person', name: SITE.name, url: SITE.url },
-  mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).toString(),
-  image: new URL(ogImage, Astro.site).toString(),
-};
 ---
 
-<PostLayout post={post} headings={headings} image={ogImage} jsonLd={blogPostingJsonLd}>
-  <nav class="mb-10 flex flex-col gap-4 border-t border-line pt-6 sm:flex-row sm:justify-between" aria-label="Navigasi tulisan" slot="after">
-    {
-      prev ? (
-        <a href={`/writing/${prev.id}`} class="text-sm text-muted transition-colors hover:text-accent">
-          ← {prev.data.title}
-        </a>
-      ) : (
-        <span />
-      )
-    }
-    {
-      next && (
-        <a href={`/writing/${next.id}`} class="text-sm text-muted transition-colors hover:text-accent sm:text-right">
-          {next.data.title} →
-        </a>
-      )
-    }
-  </nav>
-  <Content />
-</PostLayout>
+<PostDetail lang="id" post={post} prev={prev} next={next} />

@@ -1,22 +1,25 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
+import { t, withLang, type Lang } from '../i18n/ui';
 
 interface Props {
   project: CollectionEntry<'projects'>;
+  lang?: Lang;
 }
 
-const { project } = Astro.props;
+const { project, lang = 'id' } = Astro.props;
+const T = t(lang);
 const { title, summary, status, stack, cover } = project.data;
 ---
 
 <article class="group flex flex-col overflow-hidden rounded-xl border border-line bg-surface transition-colors hover:border-accent">
-  <a href={`/projects/${project.id}`} class="flex flex-1 flex-col">
+  <a href={withLang(`/projects/${project.id}`, lang)} class="flex flex-1 flex-col">
     {
       cover && (
         <Image
           src={cover}
-          alt={`Tangkapan layar proyek ${title}`}
+          alt={T.projects.screenshotAlt(title)}
           widths={[480, 720, 960]}
           sizes="(min-width: 640px) 50vw, 100vw"
           class="aspect-[16/9] w-full border-b border-line object-cover"
@@ -29,10 +32,10 @@ const { title, summary, status, stack, cover } = project.data;
         <h2 class="font-serif text-xl font-medium tracking-tight transition-colors group-hover:text-accent">
           {title}
         </h2>
-        <span class="chip shrink-0">{status}</span>
+        <span class="chip shrink-0">{T.status[status] ?? status}</span>
       </div>
       <p class="text-sm text-muted">{summary}</p>
-      <ul class="mt-auto flex flex-wrap gap-2 pt-2" aria-label="Teknologi">
+      <ul class="mt-auto flex flex-wrap gap-2 pt-2" aria-label={T.projects.stackLabel}>
         {stack.map((item) => <li class="chip">{item}</li>)}
       </ul>
     </div>

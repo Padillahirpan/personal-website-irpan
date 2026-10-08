@@ -1,0 +1,10 @@
+---
+import PostDetail from '../../../components/pages/PostDetail.astro';
+import { writingPaths } from '../../../utils/content';
+
+export const getStaticPaths = writingPaths;
+
+const { post, prev, next } = Astro.props;
+---
+
+<PostDetail lang="en" post={post} prev={prev} next={next} />

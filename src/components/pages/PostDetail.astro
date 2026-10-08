@@ -1,0 +1,66 @@
+---
+import { render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import { getImage } from 'astro:assets';
+import PostLayout from '../../layouts/PostLayout.astro';
+import { SITE } from '../../data/site';
+import { isoDate } from '../../utils/content';
+import { t, withLang, type Lang } from '../../i18n/ui';
+
+interface Props {
+  lang?: Lang;
+  post: CollectionEntry<'writing'>;
+  prev: CollectionEntry<'writing'> | null;
+  next: CollectionEntry<'writing'> | null;
+}
+
+const { lang = 'id', post, prev, next } = Astro.props;
+const T = t(lang);
+const { Content, headings } = await render(post);
+
+let ogImage = '/og-default.jpg';
+if (post.data.cover) {
+  const rendered = await getImage({ src: post.data.cover, width: 1200, format: 'jpg' });
+  ogImage = rendered.src;
+}
+
+// Isi post ditulis dalam bahasa aslinya (id) — inLanguage mengikuti bahasa konten.
+const blogPostingJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: isoDate(post.data.date),
+  inLanguage: 'id',
+  keywords: post.data.tags.join(', '),
+  author: { '@type': 'Person', name: SITE.name, url: SITE.url },
+  mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).toString(),
+  image: new URL(ogImage, Astro.site).toString(),
+};
+---
+
+<PostLayout post={post} headings={headings} image={ogImage} jsonLd={blogPostingJsonLd} lang={lang}>
+  <nav
+    slot="after"
+    class="mb-10 flex flex-col gap-4 border-t border-line pt-6 sm:flex-row sm:justify-between"
+    aria-label={T.writing.navAria}
+  >
+    {
+      prev ? (
+        <a href={withLang(`/writing/${prev.id}`, lang)} class="text-sm text-muted transition-colors hover:text-accent">
+          ← {prev.data.title}
+        </a>
+      ) : (
+        <span />
+      )
+    }
+    {
+      next && (
+        <a href={withLang(`/writing/${next.id}`, lang)} class="text-sm text-muted transition-colors hover:text-accent sm:text-right">
+          {next.data.title} →
+        </a>
+      )
+    }
+  </nav>
+  <Content />
+</PostLayout>

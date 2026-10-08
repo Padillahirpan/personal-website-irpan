@@ -1,5 +1,6 @@
 ---
 import { SITE } from '../data/site';
+import { t, langAlternates, type Lang } from '../i18n/ui';
 
 interface Props {
   title: string;
@@ -8,13 +9,25 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   jsonLd?: object | object[];
+  lang?: Lang;
 }
 
-const { title, description, image = '/og-default.jpg', type = 'website', jsonLd } = Astro.props;
+const {
+  title,
+  description,
+  image = '/og-default.jpg',
+  type = 'website',
+  jsonLd,
+  lang = 'id',
+} = Astro.props;
 
+const T = t(lang);
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(image, Astro.site);
 const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN;
+const alt = langAlternates(Astro.url.pathname);
+const idUrl = new URL(alt.id, Astro.site);
+const enUrl = new URL(alt.en, Astro.site);
 ---
 
 <meta charset="utf-8" />
@@ -28,7 +41,7 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN;
 
 <meta property="og:type" content={type} />
 <meta property="og:site_name" content={SITE.name} />
-<meta property="og:locale" content={SITE.locale} />
+<meta property="og:locale" content={T.ogLocale} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonical} />
@@ -39,6 +52,9 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN;
 <meta name="twitter:image" content={ogImage} />
 
 <link rel="alternate" type="application/rss+xml" title={SITE.name} href={new URL('rss.xml', Astro.site)} />
+<link rel="alternate" hreflang="id" href={idUrl} />
+<link rel="alternate" hreflang="en" href={enUrl} />
+<link rel="alternate" hreflang="x-default" href={idUrl} />
 
 {
   jsonLd && (
